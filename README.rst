@@ -91,7 +91,7 @@ Simple project with variant build and one shared library
       SConscript('src/SConscript', variant_dir = 'build', duplicate = 0, exports = [ 'env' ])
 
       # Generate correct dependencies of `*.gcda` files on test runner.
-      env.GCovInjectRuntestSideEffects('check')
+      env.GCovGcdaGenerator('check')
 
 #. Write ``src/SConscript``:
 
@@ -223,7 +223,7 @@ original SCons tool available in cxxtest_ repository.
       SConscript('src/SConscript', variant_dir = 'build', duplicate = 0, exports = [ 'env' ])
 
       # Generate correct dependencies of `*.gcda` files on test runner.
-      env.GCovInjectRuntestSideEffects('check')
+      env.GCovGcdaGenerator('check')
 
 #. Write ``src/SConscript``:
 

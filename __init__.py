@@ -256,7 +256,7 @@ def _InjectObjectEmitters(env, **overrides):
             if not isinstance(org_emitter, _GCovAwareObjectEmitter):
                 builder.emitter = _GCovAwareObjectEmitter(org_emitter)
 
-def _InjectRuntestSideEffects(env, target, target_factory = _null, **overrides):
+def _GcdaGenerator(env, target, target_factory = _null, **overrides):
     from SCons.Util import NodeList
     env = env.Override(overrides)
     if env.get('GCCCOV_DISABLE'):
@@ -292,7 +292,7 @@ def generate(env):
 
     env.AddMethod(_InjectObjectEmitters, 'GCovInjectObjectEmitters')
     env.AddMethod(_FindGcdaNodes, 'GCovFindGcdaNodes')
-    env.AddMethod(_InjectRuntestSideEffects, 'GCovInjectRuntestSideEffects')
+    env.AddMethod(_GcdaGenerator, 'GCovGcdaGenerator')
 
 def exists(env):
     return 1

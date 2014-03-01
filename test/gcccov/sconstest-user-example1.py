@@ -74,7 +74,7 @@ env.Replace(CCFLAGS = ['-g', '-O0', '--coverage'], LINKFLAGS = ['--coverage'])
 SConscript('src/SConscript', variant_dir = 'build', duplicate = 0, exports = [ 'env' ])
 #
 # Generate correct dependencies of `*.gcda` files on test runner.
-env.GCovInjectRuntestSideEffects('check')
+env.GCovGcdaGenerator('check')
 """)
 test.run(chdir = 'ex1', arguments = ['-Q'])
 test.must_exist(['ex1','build','bar.gcno'])
