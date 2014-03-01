@@ -304,9 +304,11 @@ Install them with::
 
   sudo apt-get install python-epydoc python-docutils python-pygments 
 
-.. code-block::
+The API documentation may be generated with::
 
       scons api-doc
+
+The resultant html files get written to ``build/doc/api`` directory.
 
 TESTING
 -------
