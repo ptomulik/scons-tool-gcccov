@@ -1,6 +1,8 @@
 scons-tool-gcccov
 =================
 
+.. image:: https://travis-ci.org/ptomulik/scons-tool-gcccov.png?branch=master   :target: https://travis-ci.org/ptomulik/scons-tool-gcccov
+
 Support for gcc_ code coverage features. Note, this is not a tool for running
 gcov_ program.
 
