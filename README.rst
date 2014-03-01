@@ -296,9 +296,9 @@ API DOCUMENTATION
 
 You need few prerequisites to generate API documentation:
 
-  - epydoc_,
-  - python-docutils_,
-  - python-pygments_.
+- epydoc_,
+- python-docutils_,
+- python-pygments_.
 
 Install them with::
 
