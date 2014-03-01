@@ -291,7 +291,12 @@ Construction variables
 GENERATING DOCUMENTATION
 ------------------------
 
-TODO:
+API DOCUMENTATION
+^^^^^^^^^^^^^^^^^
+
+.. code-block::
+
+      scons api-doc
 
 TESTING
 -------

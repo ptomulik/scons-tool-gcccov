@@ -1,4 +1,4 @@
-"""`gcccov`
+"""gcccov
 
 Tool specific initialization for gcccov.
 """
