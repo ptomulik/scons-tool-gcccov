@@ -21,6 +21,11 @@
 __pycache__
 
 
-site_scons/
+# Test suite
+/QMTest/
+/runtest.py
+
+# site_scons
+/site_scons/
 
 # vim: set syntax=conf tabstop=2 expandtab nospell:
