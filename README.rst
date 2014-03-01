@@ -294,6 +294,16 @@ GENERATING DOCUMENTATION
 API DOCUMENTATION
 ^^^^^^^^^^^^^^^^^
 
+You need few prerequisites to generate API documentation:
+
+  - epydoc_,
+  - python-docutils_,
+  - python-pygments_.
+
+Install them with::
+
+  sudo apt-get install python-epydoc python-docutils python-pygments 
+
 .. code-block::
 
       scons api-doc
@@ -341,5 +351,8 @@ SOFTWARE
 .. _gcov files: http://gcc.gnu.org/onlinedocs/gcc/Gcov-Data-Files.html#Gcov-Data-Files
 .. _cxxtest: http://cxxtest.com
 .. _scons-tool-cxxtest: https://github.com/ptomulik/scons-tool-cxxtest
+.. _epydoc: http://epydoc.sourceforge.net/
+.. _python-docutils: http://pypi.python.org/pypi/docutils
+.. _python-pygments: http://pygments.org/
 
 .. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->
