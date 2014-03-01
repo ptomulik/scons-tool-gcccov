@@ -100,7 +100,7 @@ Simple project with variant build and one shared library
       # src/SConscript
       Import(['env'])
       bar = env.SharedLibrary(['bar'], ['bar.c'])
-      pro = env.Program('main.c', LIBS = bar)
+      pro = env.Program('main.c', LIBS = ['bar'], LIBPATH = ['.'])
       run = env.Action("LD_LIBRARY_PATH=%s %s" % (env.Dir('.').path, pro[0].path))
       env.Alias('check', pro, run)
       env.AlwaysBuild('check')
@@ -182,7 +182,7 @@ original SCons tool available in cxxtest_ repository.
 
       git submodule add git://github.com/ptomulik/scons-tool-cxxtest.git site_scons/site_tools/cxxtest
 
-#. Create source file ``src/bar.c`` as in previous example:
+#. Create source file ``src/bar.cpp``:
 
    .. code-block:: cpp
 
