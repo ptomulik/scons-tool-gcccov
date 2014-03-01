@@ -104,16 +104,16 @@ Simple project with variant build and one shared library
        gcc -o build/main.o -c -g -O0 --coverage src/main.c
        gcc -o build/main --coverage build/main.o -Lbuild -Lsrc -lbar
 
-  Note the ``*.gcno`` files generated under ``build/`` directory:
+   Note the ``*.gcno`` files generated under ``build/`` directory:
 
-  .. code-block::
+   .. code-block::
       
       ptomulik@barakus:$ ls build/*.gc*
       build/bar.gcno  build/main.gcno
 
-  Now, cleanup project:
+   Now, cleanup project:
 
-  .. code-block::
+   .. code-block::
 
       ptomulik@barakus:$ scons -Q -c
       Removed build/bar.os
@@ -123,10 +123,10 @@ Simple project with variant build and one shared library
       Removed build/main.gcno
       Removed build/main
 
-  Note the ``*.gcno`` files get cleaned as well. Now we'll build and run test
-  program:
+   Note the ``*.gcno`` files get cleaned as well. Now we'll build and run test
+   program:
 
-  .. code-block::
+   .. code-block::
 
       ptomulik@barakus:$ scons -Q check
       gcc -o build/main.o -c -g -O0 --coverage src/main.c
@@ -135,16 +135,16 @@ Simple project with variant build and one shared library
       gcc -o build/main --coverage build/main.o -Lbuild -Lsrc -lbar
       LD_LIBRARY_PATH=build build/main
 
-  and list the coverage files again:
+   and list the coverage files again:
 
-  .. code-block::
+   .. code-block::
       
       ptomulik@barakus:$ ls build/*.gc*
       build/bar.gcda  build/bar.gcno  build/main.gcda  build/main.gcno
 
-  Cleanup the project again:
+   Cleanup the project again:
 
-  .. code-block::
+   .. code-block::
 
       ptomulik@barakus:$ scons -Q -c
       Removed build/bar.os
@@ -156,7 +156,7 @@ Simple project with variant build and one shared library
       Removed build/main.gcda
       Removed build/main
 
-  as you see, the ``*.gcda`` files get cleaned as well.
+   as you see, the ``*.gcda`` files get cleaned as well.
 
 Module description
 ------------------
