@@ -29,6 +29,5 @@ BINDIR="$TOPDIR/bin"
 
 # Run all scripts in sequel
 $BINDIR/download-test-framework.sh
-$BINDIR/download-docbook-tool.sh
 
 # vim: set syntax=sh expandtab tabstop=4 shiftwidth=4 nospell:
