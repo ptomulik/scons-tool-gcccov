@@ -45,8 +45,8 @@ Git-based projects
 Other projects
 ^^^^^^^^^^^^^^
 
-# Download and copy this source tree to ``site_scons/site_tools/gcccov/``
-  subdirectory of your project::
+#. Download and copy this source tree to ``site_scons/site_tools/gcccov/``
+   subdirectory of your project::
 
       mkdir -p site_scons/site_tools/gcccov && \
         (cd site_scons/site_tools/gcccov && \
