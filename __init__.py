@@ -28,6 +28,8 @@ __docformat__ = "restructuredText"
 
 class _null(object): pass
 
+class GCovRecursionError(Exception): pass
+
 class _GCovAwareObjectEmitter(object):
     """gcov aware object emitter
 
@@ -153,7 +155,7 @@ def _find_objects_r(env, nodes, object_builders, objects, excludes, recur):
     """Helper function (recursion) for _find_objects()"""
     from SCons.Util import NodeList
     if recur <= 0:
-        raise RuntimeError("Maximum recursion depth exceeded")
+        raise GCovRecursionError("Maximum recursion depth exceeded")
     children = NodeList()
     for node in nodes:
         if node not in excludes:
@@ -204,25 +206,25 @@ def _object2gcda(env, objects, target):
             gcdas.remove(exclude)
     return gcdas
 
-def _find_gcda_files(env, target):
-    """Find all *.gcda files that the **target** node should depend on.
-
-    :Parameters:
-        env: SCons.Environment.Environment
-            a SCons Environment object
-        target:
-            node where we start our recursive search, usually program name or
-            an alias which depends on one or more programs. Of course  it may
-            be a list of such things. Typically it's an alias target which runs
-            test program (the 'check' target).
-    """
-    objects = _find_objects(env, target)
-    return _object2gcda(env, objects, target)
-
 def _detect_gcov(env):
     if env.has_key('GCCCOV'):
         return env['GCCCOV']
     return env.WhereIs('gcov')
+
+def _FindGcdaNodes(env, root):
+    """Find all *.gcda files that the **root** node should depend on.
+
+    :Parameters:
+        env: SCons.Environment.Environment
+            a SCons Environment object
+        root:
+            node where we start our recursive search, usually program name or
+            an alias which depends on one or more programs. Of course  it may
+            be a list of such things. Typically it's an alias target which runs
+            a test program (typically the 'check' target).
+    """
+    objects = _find_objects(env, root)
+    return _object2gcda(env, objects, root)
 
 def _InjectObjectEmitters(env, **overrides):
     """Inject object emitters
@@ -262,8 +264,9 @@ def _InjectRuntestSideEffects(env, target, target_factory = _null, **overrides):
     if target_factory is _null:
         target_factory = env.get('GCCCOV_RUNTEST_FACTORY', env.ans.Alias)
     target = env.arg2nodes(target, target_factory, target = target)
+    result = { }
     for tgt in target:
-        gcda = _find_gcda_files(env, tgt)
+        gcda = _FindGcdaNodes(env, tgt)
         env.SideEffect(gcda, tgt)
         noclean = env.get('GCCCOV_NOCLEAN',[])
         noclean = env.arg2nodes(noclean, target = tgt)
@@ -275,7 +278,8 @@ def _InjectRuntestSideEffects(env, target, target_factory = _null, **overrides):
             env.Clean(tgt, clean)
         if len(ignore) > 0:
             env.Ignore('.', gcda)
-    return target
+        result[tgt] = gcda
+    return result
 
 def generate(env):
     """Add gcov Builders and construction variables to the Environment"""
@@ -287,6 +291,7 @@ def generate(env):
                     GCCCOV_SUFFIX = '.gcov' )
 
     env.AddMethod(_InjectObjectEmitters, 'GCovInjectObjectEmitters')
+    env.AddMethod(_FindGcdaNodes, 'GCovFindGcdaNodes')
     env.AddMethod(_InjectRuntestSideEffects, 'GCovInjectRuntestSideEffects')
 
 def exists(env):
