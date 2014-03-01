@@ -42,7 +42,7 @@ env = Environment( tools = ["default", "gcccov"] )
 env.GCovInjectObjectEmitters()
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
-    suffixes = list(set(builder.emitter.keys()) & set(env['GCOV_OBJECT_BUILDERS']))
+    suffixes = list(set(builder.emitter.keys()) & set(env['GCCCOV_OBJECT_BUILDERS']))
     for sfx in suffixes:
         emitter = builder.emitter[sfx]
         try:
@@ -53,7 +53,7 @@ for bn in ['Object', 'StaticObject', 'SharedObject']:
 test.run(chdir = 't1')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with env['GCOV_OBJECT_BUILDERS'] = []
+#  GCovInjectObjectEmitters() with env['GCCCOV_OBJECT_BUILDERS'] = []
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t2'])
@@ -62,7 +62,7 @@ test.write( ['t2', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-env['GCOV_OBJECT_BUILDERS'] = []
+env['GCCCOV_OBJECT_BUILDERS'] = []
 env.GCovInjectObjectEmitters()
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
@@ -77,7 +77,7 @@ for bn in ['Object', 'StaticObject', 'SharedObject']:
 test.run(chdir = 't2')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with env['GCOV_OBJECT_BUILDERS'] = None
+#  GCovInjectObjectEmitters() with env['GCCCOV_OBJECT_BUILDERS'] = None
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t3'])
@@ -86,7 +86,7 @@ test.write( ['t3', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-env['GCOV_OBJECT_BUILDERS'] = None
+env['GCCCOV_OBJECT_BUILDERS'] = None
 env.GCovInjectObjectEmitters()
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
@@ -101,7 +101,7 @@ for bn in ['Object', 'StaticObject', 'SharedObject']:
 test.run(chdir = 't3')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with env['GCOV_OBJECT_BUILDERS'] undefined
+#  GCovInjectObjectEmitters() with env['GCCCOV_OBJECT_BUILDERS'] undefined
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t4'])
@@ -110,7 +110,7 @@ test.write( ['t4', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-del(env['GCOV_OBJECT_BUILDERS'])
+del(env['GCCCOV_OBJECT_BUILDERS'])
 env.GCovInjectObjectEmitters()
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
@@ -125,7 +125,7 @@ for bn in ['Object', 'StaticObject', 'SharedObject']:
 test.run(chdir = 't4')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with GCOV_OBJECT_BUILDERS = ['SharedObject']
+#  GCovInjectObjectEmitters() with GCCCOV_OBJECT_BUILDERS = ['SharedObject']
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t5'])
@@ -134,10 +134,10 @@ test.write( ['t5', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-env.GCovInjectObjectEmitters(GCOV_OBJECT_BUILDERS = ['SharedObject'])
+env.GCovInjectObjectEmitters(GCCCOV_OBJECT_BUILDERS = ['SharedObject'])
 for bn in ['SharedObject']:
     builder = env['BUILDERS'][bn].builder
-    suffixes = list(set(builder.emitter.keys()) & set(env['GCOV_OBJECT_BUILDERS']))
+    suffixes = list(set(builder.emitter.keys()) & set(env['GCCCOV_OBJECT_BUILDERS']))
     for sfx in suffixes:
         emitter = builder.emitter[sfx]
         try:
@@ -157,7 +157,7 @@ for bn in ['Object', 'StaticObject']:
 test.run(chdir = 't5')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with GCOV_OBJECT_BUILDERS = []
+#  GCovInjectObjectEmitters() with GCCCOV_OBJECT_BUILDERS = []
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t6'])
@@ -166,7 +166,7 @@ test.write( ['t6', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-env.GCovInjectObjectEmitters(GCOV_OBJECT_BUILDERS = [])
+env.GCovInjectObjectEmitters(GCCCOV_OBJECT_BUILDERS = [])
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
     for (sfx,emitter) in builder.emitter.iteritems():
@@ -180,7 +180,7 @@ for bn in ['Object', 'StaticObject', 'SharedObject']:
 test.run(chdir = 't6')
 
 ##############################################################################
-#  GCovInjectObjectEmitters() with GCOV_OBJECT_BUILDERS = None
+#  GCovInjectObjectEmitters() with GCCCOV_OBJECT_BUILDERS = None
 ##############################################################################
 test = TestSCons.TestSCons()
 test.subdir(['t7'])
@@ -189,7 +189,7 @@ test.write( ['t7', 'SConstruct'],
 """
 import SCons.Builder
 env = Environment( tools = ["default", "gcccov"] )
-env.GCovInjectObjectEmitters(GCOV_OBJECT_BUILDERS = None)
+env.GCovInjectObjectEmitters(GCCCOV_OBJECT_BUILDERS = None)
 for bn in ['Object', 'StaticObject', 'SharedObject']:
     builder = env['BUILDERS'][bn].builder
     for (sfx,emitter) in builder.emitter.iteritems():

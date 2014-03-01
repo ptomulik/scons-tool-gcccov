@@ -38,11 +38,11 @@ class _GCovAwareObjectEmitter(object):
 
     The emitter uses the following construction variables:
 
-    - ``GCOV_GCNO_SUFFIX``
-    - ``GCOV_GCDA_SUFFIX``
-    - ``GCOV_EXCLUDE``,
-    - ``GCOV_NOCLEAN``,
-    - ``GCOV_NOIGNORE``.
+    - ``GCCCOV_GCNO_SUFFIX``
+    - ``GCCCOV_GCDA_SUFFIX``
+    - ``GCCCOV_EXCLUDE``,
+    - ``GCCCOV_NOCLEAN``,
+    - ``GCCCOV_NOIGNORE``.
 
     The emitter may be injected to default object builders with
     ``GCovInjectObjectEmitters()`` method.
@@ -62,17 +62,17 @@ class _GCovAwareObjectEmitter(object):
         from SCons.Util import NodeList
         # TODO: test it with variant builds (source and target paths)
         # FIXME: I'm not sure if target[0] is the only relevant node ...
-        excludes = env.get('GCOV_EXCLUDE',[])
+        excludes = env.get('GCCCOV_EXCLUDE',[])
         excludes = env.arg2nodes(excludes, target = target, source = source)
-        noclean = env.get('GCOV_NOCLEAN',[])
+        noclean = env.get('GCCCOV_NOCLEAN',[])
         noclean = env.arg2nodes(noclean, target = target, source = source)
-        noignore = env.get('GCOV_NOIGNORE',[])
+        noignore = env.get('GCCCOV_NOIGNORE',[])
         noignore = env.arg2nodes(noignore, target = target, source = source)
         tgt = target[0]
         tgt_base = os.path.splitext(str(tgt))[0]
         if tgt not in excludes:
-            gcno = env.File(tgt_base + env.get('GCOV_GCNO_SUFFIX','.gcno'))
-            gcda = env.File(tgt_base + env.get('GCOV_GCDA_SUFFIX','.gcda'))
+            gcno = env.File(tgt_base + env.get('GCCCOV_GCNO_SUFFIX','.gcno'))
+            gcda = env.File(tgt_base + env.get('GCCCOV_GCDA_SUFFIX','.gcda'))
             if gcno not in excludes:
                 env.SideEffect(gcno, tgt)
                 if gcno not in noclean:
@@ -141,13 +141,13 @@ def _arg2builders(env, arg):
     return [b for b in builders if b is not None]
 
 def _get_object_builders(env):
-    """Return a list of object builders according to ``env['GCOV_OBJECT_BUILDERS']``.
+    """Return a list of object builders according to ``env['GCCCOV_OBJECT_BUILDERS']``.
 
     :Parameters:
         env: SCons.Environment.Environment
             a SCons Environment object
     """
-    return _arg2builders(env, env.get('GCOV_OBJECT_BUILDERS', []))
+    return _arg2builders(env, env.get('GCCCOV_OBJECT_BUILDERS', []))
 
 def _find_objects_r(env, nodes, object_builders, objects, excludes, recur):
     """Helper function (recursion) for _find_objects()"""
@@ -181,9 +181,9 @@ def _find_objects(env, target):
     nodes = env.arg2nodes(target, target = target)
     object_builders = _get_object_builders(env)
     objects = NodeList()
-    excludes = env.get('GCOV_EXCLUDE',[])
+    excludes = env.get('GCCCOV_EXCLUDE',[])
     excludes = env.arg2nodes(excludes, target = target)
-    recur = env.get('GCOV_MAX_RECURSION', 256)
+    recur = env.get('GCCCOV_MAX_RECURSION', 256)
     _find_objects_r(env, nodes, object_builders, objects, excludes, recur)
     return NodeList(unique(objects))
 
@@ -194,9 +194,9 @@ def _object2gcda(env, objects, target):
     objects = env.arg2nodes(objects, target = target)
     gcdas = NodeList()
     for obj in objects:
-        gcda = os.path.splitext(str(obj))[0] + env.get('GCOV_GCDA_SUFFIX','.gcda')
+        gcda = os.path.splitext(str(obj))[0] + env.get('GCCCOV_GCDA_SUFFIX','.gcda')
         gcdas.append(gcda)
-    excludes = env.get('GCOV_EXCLUDE',[])
+    excludes = env.get('GCCCOV_EXCLUDE',[])
     excludes = env.arg2nodes(excludes, target = target)
     gcdas = env.arg2nodes(gcdas, target = target)
     for exclude in excludes:
@@ -220,8 +220,8 @@ def _find_gcda_files(env, target):
     return _object2gcda(env, objects, target)
 
 def _detect_gcov(env):
-    if env.has_key('GCOV'):
-        return env['GCOV']
+    if env.has_key('GCCCOV'):
+        return env['GCCCOV']
     return env.WhereIs('gcov')
 
 def _InjectObjectEmitters(env, **overrides):
@@ -234,17 +234,17 @@ def _InjectObjectEmitters(env, **overrides):
             Used to override environment construction variables
 
     Injects our _GCovAwareObjectEmitter to all the obejct builders listed in
-    ``GCOV_OBJECT_BUILDERS``.
+    ``GCCCOV_OBJECT_BUILDERS``.
     """
     from SCons.Util import is_Dict
     env = env.Override(overrides)
-    if env.get('GCOV_DISABLE'):
+    if env.get('GCCCOV_DISABLE'):
         return
     builders = _get_object_builders(env)
     for builder in builders:
         if is_Dict(builder.emitter):
             emitters = builder.emitter
-            suffixes = env.get('GCOV_SOURCE_SUFFIXES', emitters.keys())
+            suffixes = env.get('GCCCOV_SOURCE_SUFFIXES', emitters.keys())
             for sfx in suffixes:
                 org_emitter = builder.emitter.get(sfx)
                 if org_emitter and not isinstance(org_emitter, _GCovAwareObjectEmitter):
@@ -257,18 +257,18 @@ def _InjectObjectEmitters(env, **overrides):
 def _InjectRuntestSideEffects(env, target, target_factory = _null, **overrides):
     from SCons.Util import NodeList
     env = env.Override(overrides)
-    if env.get('GCOV_DISABLE'):
+    if env.get('GCCCOV_DISABLE'):
         return target
     if target_factory is _null:
-        target_factory = env.get('GCOV_RUNTEST_FACTORY', env.ans.Alias)
+        target_factory = env.get('GCCCOV_RUNTEST_FACTORY', env.ans.Alias)
     target = env.arg2nodes(target, target_factory, target = target)
     for tgt in target:
         gcda = _find_gcda_files(env, tgt)
         env.SideEffect(gcda, tgt)
-        noclean = env.get('GCOV_NOCLEAN',[])
+        noclean = env.get('GCCCOV_NOCLEAN',[])
         noclean = env.arg2nodes(noclean, target = tgt)
         clean = NodeList([ f for f in gcda if f not in noclean ])
-        noignore = env.get('GCOV_NOIGNORE',[])
+        noignore = env.get('GCCCOV_NOIGNORE',[])
         noignore = env.arg2nodes(noignore, target = tgt)
         ignore = NodeList([ f for f in gcda if f not in noignore])
         if len(clean) > 0:
@@ -281,10 +281,10 @@ def generate(env):
     """Add gcov Builders and construction variables to the Environment"""
     import SCons.Util, SCons.Tool, SCons.Builder
 
-    env.SetDefault( GCOV_OBJECT_BUILDERS = ['Object', 'StaticObject', 'SharedObject'],
-                    GCOV_GCNO_SUFFIX = '.gcno',
-                    GCOV_GCDA_SUFFIX = '.gcda',
-                    GCOV_SUFFIX = '.gcov' )
+    env.SetDefault( GCCCOV_OBJECT_BUILDERS = ['Object', 'StaticObject', 'SharedObject'],
+                    GCCCOV_GCNO_SUFFIX = '.gcno',
+                    GCCCOV_GCDA_SUFFIX = '.gcda',
+                    GCCCOV_SUFFIX = '.gcov' )
 
     env.AddMethod(_InjectObjectEmitters, 'GCovInjectObjectEmitters')
     env.AddMethod(_InjectRuntestSideEffects, 'GCovInjectRuntestSideEffects')

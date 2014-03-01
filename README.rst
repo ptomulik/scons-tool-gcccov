@@ -273,21 +273,20 @@ Module description
 Construction variables
 ^^^^^^^^^^^^^^^^^^^^^^
 
-======================= ==================================================================================
+========================= ==================================================================================
  Option                    Description
-======================= ==================================================================================
- GCOV_DISABLE            Disable gcov dependency injector.
- GCOV_EXCLUDE            Files (``*.gcno``, ``*.gcda`` and objects) to be excluded from processing.
- GCOV_GCDA_SUFFIX        Suffix for ``*.gcno`` files used by gcov dependency machinery.
- GCOV_GCNO_SUFFIX        Suffix for ``*.gcno`` files used by gcov dependency machinery.
- GCOV_SUFFIX             Suffix for ``*.gcov`` files produced by gcov_ tool.
- GCOV_MAX_RECURSION
- GCOV_NOCLEAN            List of gcov files which shouldn't be cleaned up.
- GCOV_NOIGNORE
- GCOV_RUNTEST_FACTORY    Factory used to build runtest target (defaults to env.ans.Alias)
- GCOV_RUNTEST_TARGETS    List of targets (usually aliases) that run test runners.
- GCOV_SOURCE_SUFFIXES    List of source file suffixes for which dependency injector should be enabled.
-======================= ==================================================================================
+========================= ==================================================================================
+ GCCCOV_DISABLE            Disable gcccov functionality.
+ GCCCOV_EXCLUDE            Files (``*.gcno``, ``*.gcda``, objects, etc.) to be excluded from processing.
+ GCCCOV_GCDA_SUFFIX        Suffix for ``*.gcda`` files used by gcov dependency machinery.
+ GCCCOV_GCNO_SUFFIX        Suffix for ``*.gcno`` files used by gcov dependency machinery.
+ GCCCOV_MAX_RECURSION      Maximum recursion depth allowed when searching for ``*.gcda`` nodes.
+ GCCCOV_NOCLEAN            List of gcov files which shouldn't be Cleaned up.
+ GCCCOV_NOIGNORE           List of gcov files which shouldn't be Ignored from main target.
+ GCCCOV_RUNTEST_FACTORY    Factory used to build runtest target (defaults to env.ans.Alias)
+ GCCCOV_RUNTEST_TARGETS    List of targets (usually aliases) that run test runners.
+ GCCCOV_SOURCE_SUFFIXES    List of source file suffixes for which dependency injector should be enabled.
+========================= ==================================================================================
 
 GENERATING DOCUMENTATION
 ------------------------
