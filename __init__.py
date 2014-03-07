@@ -245,6 +245,7 @@ def _InjectObjectEmitters(env, **overrides):
     env = env.Override(overrides)
     if env.get('GCCCOV_DISABLE'):
         return
+    org2new = {}
     builders = _get_object_builders(env)
     for builder in builders:
         if is_Dict(builder.emitter):
@@ -253,11 +254,19 @@ def _InjectObjectEmitters(env, **overrides):
             for sfx in suffixes:
                 org_emitter = builder.emitter.get(sfx)
                 if org_emitter and not isinstance(org_emitter, _GCovAwareObjectEmitter):
-                    emitters[sfx] = _GCovAwareObjectEmitter(org_emitter)
+                    if org_emitter in org2new:
+                        emitters[sfx] = org2new[org_emitter]
+                    else:
+                        emitters[sfx] = _GCovAwareObjectEmitter(org_emitter)
+                        org2new[org_emitter] = emitters[sfx]
         else:
             org_emitter = builder.emitter
             if not isinstance(org_emitter, _GCovAwareObjectEmitter):
-                builder.emitter = _GCovAwareObjectEmitter(org_emitter)
+                if org_emitter in org2new:
+                    builder.emitter = org2new[org_emitter]
+                else:
+                    builder.emitter = _GCovAwareObjectEmitter(org_emitter)
+                    org2new[org_emitter] = builder.emitter
 
 def _GcdaGenerator(env, target, target_factory = _null, **overrides):
     """Tell that **target** produces one or more ``*.gcda`` files.
