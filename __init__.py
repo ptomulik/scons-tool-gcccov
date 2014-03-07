@@ -33,24 +33,27 @@ class GCovRecursionError(Exception): pass
 class _GCovAwareObjectEmitter(object):
     """gcov aware object emitter
 
-    This is an emitter object we inject into Object file builders to generate
-    propet dependencies between object files and gcov's *.gcno/*.gcda files.
-    For each created object this emitter adds its associated *.gcno file to
-    object's side effects and *.gcda file to its dependencies.
+    This is an emitter object we inject to Object (``*.o``, ``*.os``, etc.)
+    builders in order to insert properly gcov's ``*.gcno``/``*.gcda`` files
+    into dependency tree. For each new ``Object`` file (``foo.o``, say) the
+    emitter defines its accompanying ``foo.gcno`` file to be a side effect of
+    the ``foo.o`` and ``foo.gcda`` file to be ``Dependent`` on ``foo.o``. The
+    ``foo.gcno`` and ``foo.gcda`` files both are ``Ignored`` from ``'.'``.
 
     The emitter uses the following construction variables:
 
-    - ``GCCCOV_GCNO_SUFFIX``
-    - ``GCCCOV_GCDA_SUFFIX``
-    - ``GCCCOV_EXCLUDE``,
-    - ``GCCCOV_NOCLEAN``,
-    - ``GCCCOV_NOIGNORE``.
+    - ``GCCCOV_GCNO_SUFFIX`` - suffix for ``*.gcno`` files,
+    - ``GCCCOV_GCDA_SUFFIX`` - suffix for ``*.gcda`` files,
+    - ``GCCCOV_EXCLUDE`` - list of files to be excluded from this processing,
+    - ``GCCCOV_NOCLEAN`` - list of files that should not be cleaned up,
+    - ``GCCCOV_NOIGNORE`` - list of files that should not be ``Ignored`` from
+      ``'.'``.
 
     The emitter may be injected to default object builders with
-    ``GCovInjectObjectEmitters()`` method.
+    `_InjectObjectEmitters()`.
     """
     def __init__(self, original_emitter):
-        """Initialize object
+        """Initialize the emitter callable object
 
         :Parameters:
             original_emitter : object
@@ -96,9 +99,9 @@ def _arg2builder(env, arg):
     """Convert an argument to a builder object it refers.
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             a SCons Environment object
-        arg:
+        arg
             an argument to be converted to a real builder, may be builder name
             or a builder object.
 
@@ -125,9 +128,9 @@ def _arg2builders(env, arg):
     """Convert an argument to a list of builder objects it refers to.
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             a SCons Environment object
-        arg:
+        arg
             an argument to be converted to a builders, may be builder name,
             builder object or a list of (intermixed) builder names/objects.
 
@@ -146,7 +149,7 @@ def _get_object_builders(env):
     """Return a list of object builders according to ``env['GCCCOV_OBJECT_BUILDERS']``.
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             a SCons Environment object
     """
     return _arg2builders(env, env.get('GCCCOV_OBJECT_BUILDERS', []))
@@ -171,9 +174,9 @@ def _find_objects(env, target):
     """Find all object files that the **target** node depends on.
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             a SCons Environment object
-        target:
+        target
             node where we start our recursive search, usually program name or
             an alias which depends on one or more programs. Of course  it may
             be a list of such things. Typically it's an alias target which runs
@@ -215,9 +218,9 @@ def _FindGcdaNodes(env, root):
     """Find all *.gcda files that the **root** node should depend on.
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             a SCons Environment object
-        root:
+        root
             node where we start our recursive search, usually program name or
             an alias which depends on one or more programs. Of course  it may
             be a list of such things. Typically it's an alias target which runs
@@ -230,13 +233,13 @@ def _InjectObjectEmitters(env, **overrides):
     """Inject object emitters
 
     :Parameters:
-        env: SCons.Environment.Environment
+        env : SCons.Environment.Environment
             SCons environment object
         overrides : dict
             Used to override environment construction variables
 
-    Injects our _GCovAwareObjectEmitter to all the obejct builders listed in
-    ``GCCCOV_OBJECT_BUILDERS``.
+    Injects our `_GCovAwareObjectEmitter` to all the ``Object`` builders listed
+    in ``GCCCOV_OBJECT_BUILDERS``.
     """
     from SCons.Util import is_Dict
     env = env.Override(overrides)
@@ -257,6 +260,26 @@ def _InjectObjectEmitters(env, **overrides):
                 builder.emitter = _GCovAwareObjectEmitter(org_emitter)
 
 def _GcdaGenerator(env, target, target_factory = _null, **overrides):
+    """Tell that **target** produces one or more ``*.gcda`` files.
+
+    :Parameters:
+        env
+            An instance of SCons Environment.
+        target
+            Target node, which is supposed to produce ``*.gcda`` files, usually
+            it's an alias to a test runner, for example ``'check'`` Alias.
+        target_factory
+            Factory used to generate the **target**, by default it's
+            ``env.ans.Alias``.
+        overrides
+            Key-value parameters used to override current construction
+            variables provided by **env**.
+    
+    This method searches the current dependency tree starting from **target**.
+    During search it recognizes all Object files (``*.o``, ``*.os``, etc)
+    produced by Object builders of **env** and, for each Object file, generates
+    corresponding ``*.gcda`` node as a side effect of **target**.
+    """
     from SCons.Util import NodeList
     env = env.Override(overrides)
     if env.get('GCCCOV_DISABLE'):
