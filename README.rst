@@ -319,8 +319,9 @@ The remaining two methods should not be used in normal workflow. The
 ``GCovFindGcdaNodes`` determines what ``*.gcda`` files would be generated when
 running certain program(s) built with SCons. The ``GCovGcdaGenerator(alias)``
 tells SCons that ``alias`` target generates these ``*.gcda`` files as a side
-effect (the alias should run a program/test runner). The method should not be
-used currently, however, as it may break some builds, see `this thread
+effect (the alias should run a program/test runner and should have the program
+in its dependencies). The method should not be used currently, however, as it
+may break some builds, see `this thread
 <http://scons.tigris.org/ds/viewMessage.do?dsForumId=1272&dsMessageId=2411741>`_.
 Currently it's here only for experiments.
 
