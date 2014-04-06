@@ -278,7 +278,7 @@ This method is kinda dangerous and may break some builds. It internally scans
 for dependencies, and this is done at the time the SConscript file is
 processed. This may cause a problem with .sconsing file being written to wrong
 directory. More details are given in `this thread
-<http://scons.tigris.org/ds/viewMessage.do?dsForumId=1272&dsMessageId=2412547>`_.
+<http://scons.tigris.org/ds/viewMessage.do?dsForumId=1272&dsMessageId=2411741>`_.
 
 As a conclusion I would say, that you should not use it in normal workflow.
 However, it may be handy for development, code maintenance and such. For these
@@ -321,7 +321,7 @@ running certain program(s) built with SCons. The ``GCovGcdaGenerator(alias)``
 tells SCons that ``alias`` target generates these ``*.gcda`` files as a side
 effect (the alias should run a program/test runner). The method should not be
 used currently, however, as it may break some builds, see `this thread
-<http://scons.tigris.org/ds/viewMessage.do?dsForumId=1272&dsMessageId=2412547>`_.
+<http://scons.tigris.org/ds/viewMessage.do?dsForumId=1272&dsMessageId=2411741>`_.
 Currently it's here only for experiments.
 
 Construction variables
