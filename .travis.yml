@@ -7,11 +7,6 @@ python:
   - 3.6
   - 3.7-dev
 
-addons:
-  apt:
-    packages:
-      - cxxtest
-
 install:
   - pip install -U pip
   - pip --version
