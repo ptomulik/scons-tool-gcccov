@@ -221,18 +221,18 @@ Simple project with variant build and one shared library
 
    as you see, the ``*.gcda`` files get cleaned as well.
 
-Integrating with gcccov_
+Integrating with cxxtest_
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this example we create a simple test runner using gcccov_ suite. To drive
-everything from SCons_, we'll use a scons-tool-gcccov_ tool derived from the
-original SCons tool available in gcccov_ repository.
+In this example we create a simple test runner using cxxtest_ suite. To drive
+everything from SCons_, we'll use a scons-tool-cxxtest_ tool derived from the
+original SCons tool available in cxxtest_ repository.
 
-#. Install gcccov_ framework:
+#. Install cxxtest_ framework:
 
    .. code-block:: shell
 
-      sudo apt-get install gcccov
+      sudo apt-get install cxxtest
 
 #. Create new git repository:
 
@@ -248,11 +248,11 @@ original SCons tool available in gcccov_ repository.
 
       git submodule add git://github.com/ptomulik/scons-tool-gcccov.git site_scons/site_tools/gcccov
 
-#. Add scons-tool-gcccov_ tool as submodule:
+#. Add scons-tool-cxxtest_ tool as submodule:
 
    .. code-block:: shell
 
-      git submodule add git://github.com/ptomulik/scons-tool-gcccov.git site_scons/site_tools/gcccov
+      git submodule add git://github.com/ptomulik/scons-tool-cxxtest.git site_scons/site_tools/cxxtest
 
 #. Create source file ``src/bar.cpp``:
 
@@ -269,7 +269,7 @@ original SCons tool available in gcccov_ repository.
    .. code-block:: cpp
 
       // src/test.t.h
-      #include <gcccov/TestSuite.h>
+      #include <cxxtest/TestSuite.h>
 
       extern int bar();
       class BarTestSuite1 : public CxxTest::TestSuite
@@ -287,7 +287,7 @@ original SCons tool available in gcccov_ repository.
 
       # SConstruct
       import os
-      env = Environment(ENV = os.environ, tools = ['default', 'gcccov', 'gcccov'])
+      env = Environment(ENV = os.environ, tools = ['default', 'cxxtest', 'gcccov'])
       # Generate correct dependencies of `*.gcno' and `*.gcda' files on object
       # files being built from now on.
       env.GCovInjectObjectEmitters()
@@ -309,13 +309,13 @@ original SCons tool available in gcccov_ repository.
 
       ptomulik@barakus:$ LD_LIBRARY_PATH=build scons -Q check
       Loading CxxTest tool...
-      /usr/bin/python /usr/bin/gcccovgen --runner=ErrorPrinter -o build/test.cpp src/test.t.h
+      /usr/bin/python /usr/bin/cxxtestgen --runner=ErrorPrinter -o build/test.cpp src/test.t.h
       g++ -o build/test.o -c -g -O0 --coverage -I. build/test.cpp
       g++ -o build/bar.os -c -g -O0 --coverage -fPIC src/bar.cpp
       g++ -o build/libbar.so --coverage -shared build/bar.os
       g++ -o build/test --coverage build/test.o -Lbuild -Lsrc -lbar
       /tmp/prj/build/test
-      Running gcccov tests (1 test).OK!
+      Running cxxtest tests (1 test).OK!
 
 #. Check the gcov_ files created:
 
@@ -481,8 +481,10 @@ SOFTWARE
 .. _gcc: http://gcc.gnu.org/
 .. _clang: http://clang.llvm.org/
 .. _gcov files: http://gcc.gnu.org/onlinedocs/gcc/Gcov-Data-Files.html#Gcov-Data-Files
-.. _gcccov: http://gcccov.com
+.. _cxxtest: http://cxxtest.com
 .. _scons-tool-gcccov: https://github.com/ptomulik/scons-tool-gcccov
+.. _scons-tool-cxxtest: https://github.com/ptomulik/scons-tool-cxxtest
+.. _scons-tool-loader: https://github.com/ptomulik/scons-tool-loader
 .. _epydoc: http://epydoc.sourceforge.net/
 .. _python-docutils: http://pypi.python.org/pypi/docutils
 .. _python-pygments: http://pygments.org/
