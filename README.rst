@@ -1,9 +1,17 @@
 scons-tool-gcccov
 =================
 
-.. image::
-  https://travis-ci.org/ptomulik/scons-tool-gcccov.png?branch=master
-  :target: https://travis-ci.org/ptomulik/scons-tool-gcccov
+.. image:: https://badge.fury.io/py/scons-tool-gcccov.svg
+    :target: https://badge.fury.io/py/scons-tool-gcccov
+    :alt: PyPi package version
+
+.. image:: https://travis-ci.org/ptomulik/scons-tool-gcccov.svg?branch=master
+    :target: https://travis-ci.org/ptomulik/scons-tool-gcccov
+    :alt: Travis CI build status
+
+.. image:: https://ci.appveyor.com/api/projects/status/github/ptomulik/scons-tool-gcccov?svg=true
+    :target: https://ci.appveyor.com/project/ptomulik/scons-tool-gcccov
+
 
 Support for gcc_ code coverage features. Note, this is not a tool for running
 gcov_ program.
@@ -31,24 +39,69 @@ project gets cleaned up.
 Installation
 ------------
 
-Git-based projects
+There are few ways to install this tool for your project.
+
+From pypi_
+^^^^^^^^^^
+
+This method may be preferable if you build your project under a virtualenv. To
+add gcccov tool from pypi_, type (within your wirtualenv):
+
+.. code-block:: shell
+
+   pip install scons-tool-loader scons-tool-gcccov
+
+or, if your project uses pipenv_:
+
+.. code-block:: shell
+
+   pipenv install --dev scons-tool-loader scons-tool-gcccov
+
+Alternatively, you may add this to your ``Pipfile``
+
+.. code-block::
+
+   [dev-packages]
+   scons-tool-loader = "*"
+   scons-tool-gcccov = "*"
+
+
+The tool will be installed as a namespaced package ``sconstool.gcccov``
+in project's virtual environment. You may further use scons-tool-loader_
+to load the tool.
+
+As a git submodule
 ^^^^^^^^^^^^^^^^^^
 
-#. Create new git repository::
+#. Create new git repository:
+
+   .. code-block:: shell
 
       mkdir /tmp/prj && cd /tmp/prj
       touch README.rst
       git init
 
-#. Add **scons-tool-gcccov** as submodule::
+#. Add the `scons-tool-gcccov`_ as a submodule:
+
+   .. code-block:: shell
 
       git submodule add git://github.com/ptomulik/scons-tool-gcccov.git site_scons/site_tools/gcccov
+
+#. For python 2.x create ``__init__.py`` in ``site_tools`` directory:
+
+   .. code-block:: shell
+
+      touch site_scons/site_tools/__init__.py
+
+   this will allow to directly import ``site_tools.gcccov`` (this may be required by other tools).
 
 Other projects
 ^^^^^^^^^^^^^^
 
 #. Download and copy this source tree to ``site_scons/site_tools/gcccov/``
-   subdirectory of your project::
+   subdirectory of your project:
+
+   .. code-block:: shell
 
       mkdir -p site_scons/site_tools/gcccov && \
         (cd site_scons/site_tools/gcccov && \
@@ -104,7 +157,9 @@ Simple project with variant build and one shared library
       env.Alias('check', pro, run)
       env.AlwaysBuild('check')
 
-#. Try it out, first we run pure build::
+#. Try it out, first we run pure build:
+
+   .. code-block:: shell
 
        ptomulik@barakus:$ scons -Q
        gcc -o build/bar.os -c -g -O0 --coverage -fPIC src/bar.c
@@ -112,12 +167,16 @@ Simple project with variant build and one shared library
        gcc -o build/main.o -c -g -O0 --coverage src/main.c
        gcc -o build/main --coverage build/main.o -Lbuild -Lsrc -lbar
 
-   Note the ``*.gcno`` files generated under ``build/`` directory::
+   Note the ``*.gcno`` files generated under ``build/`` directory:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ ls build/*.gc*
       build/bar.gcno  build/main.gcno
 
-   Now, cleanup project::
+   Now, cleanup project:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ scons -Q -c
       Removed build/bar.os
@@ -128,7 +187,9 @@ Simple project with variant build and one shared library
       Removed build/main
 
    Note the ``*.gcno`` files get cleaned as well. Now we'll build and run test
-   program::
+   program:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ scons -Q check
       gcc -o build/main.o -c -g -O0 --coverage src/main.c
@@ -137,12 +198,16 @@ Simple project with variant build and one shared library
       gcc -o build/main --coverage build/main.o -Lbuild -Lsrc -lbar
       LD_LIBRARY_PATH=build build/main
 
-   and list the coverage files again::
+   and list the coverage files again:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ ls build/*.gc*
       build/bar.gcda  build/bar.gcno  build/main.gcda  build/main.gcno
 
-   Cleanup the project again::
+   Cleanup the project again:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ scons -Q -c
       Removed build/bar.os
@@ -156,30 +221,38 @@ Simple project with variant build and one shared library
 
    as you see, the ``*.gcda`` files get cleaned as well.
 
-Integrating with cxxtest_
+Integrating with gcccov_
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-In this example we create a simple test runner using cxxtest_ suite. To drive
-everything from SCons_, we'll use a scons-tool-cxxtest_ tool derived from the
-original SCons tool available in cxxtest_ repository.
+In this example we create a simple test runner using gcccov_ suite. To drive
+everything from SCons_, we'll use a scons-tool-gcccov_ tool derived from the
+original SCons tool available in gcccov_ repository.
 
-#. Install cxxtest_ framework::
+#. Install gcccov_ framework:
 
-      sudo apt-get install cxxtest
+   .. code-block:: shell
 
-#. Create new git repository::
+      sudo apt-get install gcccov
+
+#. Create new git repository:
+
+   .. code-block:: shell
 
       mkdir /tmp/prj && cd /tmp/prj
       touch README.rst
       git init
 
-#. Add **scons-tool-gcccov** as submodule::
+#. Add **scons-tool-gcccov** as submodule:
+
+   .. code-block:: shell
 
       git submodule add git://github.com/ptomulik/scons-tool-gcccov.git site_scons/site_tools/gcccov
 
-#. Add scons-tool-cxxtest_ tool as submodule::
+#. Add scons-tool-gcccov_ tool as submodule:
 
-      git submodule add git://github.com/ptomulik/scons-tool-cxxtest.git site_scons/site_tools/cxxtest
+   .. code-block:: shell
+
+      git submodule add git://github.com/ptomulik/scons-tool-gcccov.git site_scons/site_tools/gcccov
 
 #. Create source file ``src/bar.cpp``:
 
@@ -196,7 +269,7 @@ original SCons tool available in cxxtest_ repository.
    .. code-block:: cpp
 
       // src/test.t.h
-      #include <cxxtest/TestSuite.h>
+      #include <gcccov/TestSuite.h>
 
       extern int bar();
       class BarTestSuite1 : public CxxTest::TestSuite
@@ -214,7 +287,7 @@ original SCons tool available in cxxtest_ repository.
 
       # SConstruct
       import os
-      env = Environment(ENV = os.environ, tools = ['default', 'gcccov', 'cxxtest'])
+      env = Environment(ENV = os.environ, tools = ['default', 'gcccov', 'gcccov'])
       # Generate correct dependencies of `*.gcno' and `*.gcda' files on object
       # files being built from now on.
       env.GCovInjectObjectEmitters()
@@ -230,24 +303,30 @@ original SCons tool available in cxxtest_ repository.
       bar = env.SharedLibrary(['bar'], ['bar.cpp'])
       env.CxxTest('test.t.h', LIBS = bar)
 
-#. Try it out::
+#. Try it out:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ LD_LIBRARY_PATH=build scons -Q check
       Loading CxxTest tool...
-      /usr/bin/python /usr/bin/cxxtestgen --runner=ErrorPrinter -o build/test.cpp src/test.t.h
+      /usr/bin/python /usr/bin/gcccovgen --runner=ErrorPrinter -o build/test.cpp src/test.t.h
       g++ -o build/test.o -c -g -O0 --coverage -I. build/test.cpp
       g++ -o build/bar.os -c -g -O0 --coverage -fPIC src/bar.cpp
       g++ -o build/libbar.so --coverage -shared build/bar.os
       g++ -o build/test --coverage build/test.o -Lbuild -Lsrc -lbar
       /tmp/prj/build/test
-      Running cxxtest tests (1 test).OK!
+      Running gcccov tests (1 test).OK!
 
-#. Check the gcov_ files created::
+#. Check the gcov_ files created:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ ls build/*.gc*
       build/bar.gcda  build/bar.gcno  build/test.gcda  build/test.gcno
 
-#. Cleanup project::
+#. Cleanup project:
+
+   .. code-block:: shell
 
       ptomulik@barakus:$ scons -Q -c
       Loading CxxTest tool...
@@ -357,32 +436,26 @@ You need few prerequisites to generate API documentation:
 - python-docutils_,
 - python-pygments_.
 
-Install them with::
+Install them with
 
-  sudo apt-get install python-epydoc python-docutils python-pygments
+.. code-block:: shell
 
-The API documentation may be generated with::
+   sudo apt-get install python-epydoc python-docutils python-pygments
 
-      scons api-doc
+The API documentation may be generated with:
+
+.. code-block:: shell
+
+   scons api-doc
 
 The resultant html files get written to ``build/doc/api`` directory.
 
-TESTING
--------
 
-To run tests you first need to download testsuite framework to the local source
-tree::
-
-    ./bin/download-test-framework.sh
-
-Running all tests is as simple as::
-
-    SCONS_EXTERNAL_TEST=1 python runtest.py -a
 
 LICENSE
 -------
 
-Copyright (c) 2014 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
+Copyright (c) 2014-2018 by Pawel Tomulik <ptomulik@meil.pw.edu.pl>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -408,10 +481,12 @@ SOFTWARE
 .. _gcc: http://gcc.gnu.org/
 .. _clang: http://clang.llvm.org/
 .. _gcov files: http://gcc.gnu.org/onlinedocs/gcc/Gcov-Data-Files.html#Gcov-Data-Files
-.. _cxxtest: http://cxxtest.com
-.. _scons-tool-cxxtest: https://github.com/ptomulik/scons-tool-cxxtest
+.. _gcccov: http://gcccov.com
+.. _scons-tool-gcccov: https://github.com/ptomulik/scons-tool-gcccov
 .. _epydoc: http://epydoc.sourceforge.net/
 .. _python-docutils: http://pypi.python.org/pypi/docutils
 .. _python-pygments: http://pygments.org/
+.. _pipenv: https://pipenv.readthedocs.io/
+.. _pypi: https://pypi.org/
 
 .. <!--- vim: set expandtab tabstop=2 shiftwidth=2 syntax=rst: -->

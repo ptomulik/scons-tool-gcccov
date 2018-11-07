@@ -27,16 +27,23 @@ __docformat__ = "restructuredText"
 TODO: write documentation here
 """
 
+import sys
 import TestSCons
 
-test = TestSCons.TestSCons()
+if sys.platform == 'win32':
+    test = TestSCons.TestSCons(program='scons.bat', interpreter=None)
+else:
+    test = TestSCons.TestSCons()
 
 
 ##############################################################################
 # Initialization test 1
 ##############################################################################
 test.subdir(['t1'])
-test.dir_fixture('../..', 't1/site_scons/site_tools/gcccov')
+test.subdir(['t1', 'site_scons'])
+test.subdir(['t1', 'site_scons', 'site_tools'])
+test.subdir(['t1', 'site_scons', 'site_tools', 'gcccov'])
+test.dir_fixture('../../../..', 't1/site_scons/site_tools/gcccov')
 test.write( ['t1', 'SConstruct'],
 """
 env = Environment( tools = ["default", "gcccov"] )
@@ -47,7 +54,10 @@ test.run(chdir = 't1')
 # Initialization test 2
 ##############################################################################
 test.subdir(['t2'])
-test.dir_fixture('../..', 't2/site_scons/site_tools/gcccov')
+test.subdir(['t2', 'site_scons'])
+test.subdir(['t2', 'site_scons', 'site_tools'])
+test.subdir(['t2', 'site_scons', 'site_tools', 'gcccov'])
+test.dir_fixture('../../../..', 't2/site_scons/site_tools/gcccov')
 test.write( ['t2', 'SConstruct'],
 """
 env = Environment( tools = ["gcccov"] )
@@ -58,13 +68,18 @@ test.run(chdir = 't2')
 # Initialization test 3
 ##############################################################################
 test.subdir(['t3'])
-test.dir_fixture('../..', 't3/site_scons/site_tools/gcccov')
+test.subdir(['t3', 'site_scons'])
+test.subdir(['t3', 'site_scons', 'site_tools'])
+test.subdir(['t3', 'site_scons', 'site_tools', 'gcccov'])
+test.dir_fixture('../../../..', 't3/site_scons/site_tools/gcccov')
 test.write( ['t3', 'SConstruct'],
 """
 env = Environment( tools = [] )
 env.Tool('gcccov')
 """)
 test.run(chdir = 't3')
+
+test.pass_test()
 
 # Local Variables:
 # # tab-width:4

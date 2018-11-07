@@ -1,17 +1,27 @@
-language: python
+language:
+  python
+
 python:
-  #  - "2.4"
-  #  - "2.6"
-  - "2.7"
-    #  - "3.2"
-    #  - "3.3"
+  - 2.7
+  - 3.5
+  - 3.6
+  - 3.7-dev
+
+addons:
+  apt:
+    packages:
+      - cxxtest
+
 install:
-  - "./bin/download-deps.sh"
-  - "sudo apt-get install scons"
-  - "sudo apt-get --no-install-recommends -y install python-epydoc python-docutils python-pygments"
-    #  - "sudo apt-get --no-install-recommends -y install docbook5-xml xsltproc imagemagick"
+  - pip install -U pip
+  - pip --version
+  - pip install -r requirements.txt
+  - pip install -r requirements-dev.txt
+  - python bin/downloads.py scons-test
+
+
+before_script:
+  - which python
+
 script:
-  #  - "scons user-doc"
-  - "scons api-doc"
-  #  - "scons unit-test"
-  - "SCONS_EXTERNAL_TEST=1 python runtest.py -a"
+  - python runtest --verbose=2 -e test/system

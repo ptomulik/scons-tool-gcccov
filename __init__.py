@@ -26,6 +26,8 @@ Tool specific initialization for gcccov.
 
 __docformat__ = "restructuredText"
 
+from .about import __version__
+
 class _null(object): pass
 
 class GCovRecursionError(Exception): pass
