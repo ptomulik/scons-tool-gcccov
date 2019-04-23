@@ -7,11 +7,15 @@ python:
   - 3.6
   - 3.7-dev
 
+before_install:
+  - export REQUIREMENTS_DEV_TXT=`python -c 'import sys;print("requirements" + str(sys.version_info.major) + "-dev.txt")'`
+  - echo "REQUIREMENTS_DEV_TXT=$REQUIREMENTS_DEV_TXT"
+
 install:
   - pip install -U pip
   - pip --version
   - pip install -r requirements.txt
-  - pip install -r requirements-dev.txt
+  - pip install -r "$REQUIREMENTS_DEV_TXT"
   - python bin/downloads.py scons-test
 
 

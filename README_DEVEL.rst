@@ -44,10 +44,17 @@ Uploading to pypi.org_
 Synchronize Pipfile.lock with requirements-dev.txt
 --------------------------------------------------
 
+Python 3:
+
 .. code:: shell
 
-   pipenv lock -r --dev > requirements-dev.txt
+   pipenv lock -r --dev > requirements3-dev.txt
 
+Python 2:
+
+.. code:: shell
+
+   pipenv lock -r --dev > requirements2-dev.txt
 
 LICENSE
 -------

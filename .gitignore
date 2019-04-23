@@ -9,6 +9,7 @@
 /build/
 
 # Pipenv, setuptools, etc.
+/Pipfile.lock
 /pipenv
 .venv/
 /dist/
