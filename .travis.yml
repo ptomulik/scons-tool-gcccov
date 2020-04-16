@@ -5,7 +5,9 @@ python:
   - 2.7
   - 3.5
   - 3.6
-  - 3.7-dev
+  - 3.7
+  - 3.8
+  - 3.9-dev
 
 before_install:
   - export REQUIREMENTS_DEV_TXT=`python -c 'import sys;print("requirements" + str(sys.version_info.major) + "-dev.txt")'`

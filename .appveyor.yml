@@ -1,20 +1,21 @@
 environment:
   matrix:
-    - PYTHON: "C:\\Python27"
-    - PYTHON: "C:\\Python35"
-    - PYTHON: "C:\\Python36"
-    - PYTHON: "C:\\Python37"
-
-matrix:
-  allow_failures:
-    - PYTHON: "C:\\Python27"
+    - PYTHON: "C:\\Python27-x64"
+      PYPATH: "%APPDATA%\\Python\\Scripts;%PYTHON%;%PYTHON%\\Scripts"
+    - PYTHON: "C:\\Python35-x64"
+      PYPATH: "%APPDATA%\\Python\\Python35\\Scripts;%PYTHON%;%PYTHON%\\Scripts"
+    - PYTHON: "C:\\Python36-x64"
+      PYPATH: "%APPDATA%\\Python\\Python36\\Scripts;%PYTHON%;%PYTHON%\\Scripts"
+    - PYTHON: "C:\\Python37-x64"
+      PYPATH: "%APPDATA%\\Python\\Python37\\Scripts;%PYTHON%;%PYTHON%\\Scripts"
 
 install:
-  - SET "PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
-  - pip install --user -U pip
-  - pip install --user pipenv
+  - SET "PATH=%PYPATH%;%PATH%"
+  - SET "TESTCOMMON_PASS_SKIPS=1"
+  - python -m pip install -U pip
+  - python -m pip install -U virtualenv
+  - python -m pip install -U pipenv
   - python -m pipenv install --dev
-    #  - python -m pipenv run python -m pip install -e .
   - python bin/downloads.py
   - SET "PATH=C:\\MinGW\\bin;%PATH%"
   - mingw-get update
@@ -26,6 +27,9 @@ before_test:
 
 build: off
 
+matrix:
+  allow_failures:
+    - PYTHON: "C:\\Python27-x64"
+
 test_script:
-  #  - python -m pipenv run python -m unittest discover -t . -s "test\\unit"
-  - cmd: powershell -Command "& { python -m pipenv run python runtest --verbose=2 -e test\\system; if($LastExitCode -eq 2 -Or $LastExitCode -eq 0) { $host.SetShouldExit(0)} else {$host.SetShouldExit(1)}}"
+  - python -m pipenv run python runtest --verbose=2 -e "test\\system"
